@@ -6,34 +6,93 @@ import {
   Delete,
   Param,
   Query,
+  Body,
+  HttpCode,
 } from '@nestjs/common';
-import { data } from './data';
+import { StoreType, data } from './data';
+
+import { v4 as uuid } from 'uuid';
 
 @Controller('store')
 export class StoreController {
   @Get()
   getAllStores() {
-    return [];
+    return data.store;
   }
 
   @Get(':id')
-  getStoreById() {
-    return {};
+  getStoreById(@Param('id') id: string) {
+    return data.store.find((store) => store.id === id);
   }
 
   @Post()
-  createStore() {
-    return 'Created';
+  createStore(
+    @Body()
+    {
+      name,
+      address,
+      description,
+      location,
+      type,
+    }: {
+      name: string;
+      address: string;
+      description: string;
+      location: [number, number];
+      type: StoreType;
+    },
+  ) {
+    const newStore = {
+      id: uuid(),
+      name,
+      address,
+      description,
+      location,
+      type,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    data.store.push(newStore);
+
+    return newStore;
   }
 
   @Put(':id')
-  updateStore() {
-    return 'Updated';
+  updateStore(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      name: string;
+      address: string;
+      description: string;
+      location: [number, number];
+      type: StoreType;
+    },
+  ) {
+    const storeToUpdate = data.store.find((store) => store.id === id);
+    if (!storeToUpdate) return;
+
+    const storeIndex = data.store.findIndex((store) => store.id === id);
+
+    data.store[storeIndex] = {
+      ...data.store[storeIndex],
+      ...body,
+    };
+
+    return data.store[storeIndex];
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  deleteStore() {
-    return 'Deleted';
+  deleteStore(@Param('id') id: string) {
+    const storeIndex = data.store.findIndex((store) => store.id === id);
+
+    if (storeIndex === -1) return;
+
+    data.store.splice(storeIndex, 1);
+
+    return;
   }
 
   @Get('/find')

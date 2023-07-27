@@ -11,7 +11,7 @@ interface Data {
   }[];
 }
 
-enum StoreType {
+export enum StoreType {
   CAFE = 'cafe',
   ITALIAN = 'italian',
   KOREAN = 'korean',
