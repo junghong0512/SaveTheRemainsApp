@@ -1,3 +1,5 @@
+import { StoreData, StoreService } from './app.service';
+
 import {
   Controller,
   Get,
@@ -9,53 +11,34 @@ import {
   Body,
   HttpCode,
 } from '@nestjs/common';
-import { StoreType, data } from './data';
-
-import { v4 as uuid } from 'uuid';
+import { StoreType } from './data';
 
 @Controller('store')
 export class StoreController {
+  constructor(private readonly storeService: StoreService) {}
+
   @Get()
   getAllStores() {
-    return data.store;
+    return this.storeService.getAllStores();
   }
 
   @Get(':id')
   getStoreById(@Param('id') id: string) {
-    return data.store.find((store) => store.id === id);
+    return this.storeService.getStoreById(id);
   }
 
   @Post()
   createStore(
     @Body()
-    {
-      name,
-      address,
-      description,
-      location,
-      type,
-    }: {
-      name: string;
-      address: string;
-      description: string;
-      location: [number, number];
-      type: StoreType;
-    },
+    { name, address, description, location, type }: StoreData,
   ) {
-    const newStore = {
-      id: uuid(),
+    return this.storeService.createStore({
       name,
       address,
       description,
       location,
       type,
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-
-    data.store.push(newStore);
-
-    return newStore;
+    });
   }
 
   @Put(':id')
@@ -70,29 +53,13 @@ export class StoreController {
       type: StoreType;
     },
   ) {
-    const storeToUpdate = data.store.find((store) => store.id === id);
-    if (!storeToUpdate) return;
-
-    const storeIndex = data.store.findIndex((store) => store.id === id);
-
-    data.store[storeIndex] = {
-      ...data.store[storeIndex],
-      ...body,
-    };
-
-    return data.store[storeIndex];
+    return this.storeService.updateStore(id, body);
   }
 
   @HttpCode(204)
   @Delete(':id')
   deleteStore(@Param('id') id: string) {
-    const storeIndex = data.store.findIndex((store) => store.id === id);
-
-    if (storeIndex === -1) return;
-
-    data.store.splice(storeIndex, 1);
-
-    return;
+    return this.storeService.deleteStore(id);
   }
 
   @Get('/find')
