@@ -10,6 +10,7 @@ import {
   Query,
   Body,
   HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { StoreType } from './data';
 
@@ -23,7 +24,7 @@ export class StoreController {
   }
 
   @Get(':id')
-  getStoreById(@Param('id') id: string) {
+  getStoreById(@Param('id', ParseUUIDPipe) id: string) {
     return this.storeService.getStoreById(id);
   }
 
@@ -43,7 +44,7 @@ export class StoreController {
 
   @Put(':id')
   updateStore(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body()
     body: {
       name: string;
@@ -58,7 +59,7 @@ export class StoreController {
 
   @HttpCode(204)
   @Delete(':id')
-  deleteStore(@Param('id') id: string) {
+  deleteStore(@Param('id', ParseUUIDPipe) id: string) {
     return this.storeService.deleteStore(id);
   }
 
