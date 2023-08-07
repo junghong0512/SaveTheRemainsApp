@@ -1,4 +1,4 @@
-import { StoreData, StoreService } from './app.service';
+import { StoreService } from './app.service';
 
 import {
   Controller,
@@ -13,6 +13,8 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { StoreType } from './data';
+
+import { CreateStoreDto, UpdateStoreDto } from './dtos/store.dto';
 
 @Controller('store')
 export class StoreController {
@@ -31,7 +33,7 @@ export class StoreController {
   @Post()
   createStore(
     @Body()
-    { name, address, description, location, type }: StoreData,
+    { name, address, description, location, type }: CreateStoreDto,
   ) {
     return this.storeService.createStore({
       name,
@@ -46,13 +48,7 @@ export class StoreController {
   updateStore(
     @Param('id', ParseUUIDPipe) id: string,
     @Body()
-    body: {
-      name: string;
-      address: string;
-      description: string;
-      location: [number, number];
-      type: StoreType;
-    },
+    body: UpdateStoreDto,
   ) {
     return this.storeService.updateStore(id, body);
   }

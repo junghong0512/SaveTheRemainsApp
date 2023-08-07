@@ -11,6 +11,14 @@ export interface StoreData {
   type: StoreType;
 }
 
+interface UpdateStoreData {
+  name?: string;
+  address?: string;
+  description?: string;
+  location?: [number, number];
+  type?: StoreType;
+}
+
 @Injectable()
 export class StoreService {
   getAllStores() {
@@ -36,7 +44,7 @@ export class StoreService {
     return newStore;
   }
 
-  updateStore(id: string, body: StoreData) {
+  updateStore(id: string, body: UpdateStoreData) {
     const storeToUpdate = data.store.find((store) => store.id === id);
     if (!storeToUpdate) return;
 
