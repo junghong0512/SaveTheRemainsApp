@@ -8,7 +8,7 @@ import {
   IsNotEmpty,
   IsArray,
 } from 'class-validator';
-
+import { Exclude, Expose } from 'class-transformer';
 import { StoreType } from 'src/data';
 
 export class CreateStoreDto {
@@ -52,4 +52,28 @@ export class UpdateStoreDto {
 
   @IsOptional()
   type: StoreType;
+}
+
+export class StoreResponseDto {
+  id: string;
+  name: string;
+  address: string;
+  description: string;
+  location: [number, number];
+  type: StoreType;
+
+  @Exclude()
+  created_at: Date;
+
+  @Exclude()
+  updated_at: Date;
+
+  @Expose({ name: 'createdAt' })
+  transformCreatedAt() {
+    return this.created_at;
+  }
+
+  constructor(partial: Partial<StoreResponseDto>) {
+    Object.assign(this, partial);
+  }
 }

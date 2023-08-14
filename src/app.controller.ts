@@ -12,21 +12,24 @@ import {
   HttpCode,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { StoreType } from './data';
 
-import { CreateStoreDto, UpdateStoreDto } from './dtos/store.dto';
+import {
+  CreateStoreDto,
+  StoreResponseDto,
+  UpdateStoreDto,
+} from './dtos/store.dto';
 
 @Controller('store')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
   @Get()
-  getAllStores() {
+  getAllStores(): StoreResponseDto[] {
     return this.storeService.getAllStores();
   }
 
   @Get(':id')
-  getStoreById(@Param('id', ParseUUIDPipe) id: string) {
+  getStoreById(@Param('id', ParseUUIDPipe) id: string): StoreResponseDto {
     return this.storeService.getStoreById(id);
   }
 
@@ -34,7 +37,7 @@ export class StoreController {
   createStore(
     @Body()
     { name, address, description, location, type }: CreateStoreDto,
-  ) {
+  ): StoreResponseDto {
     return this.storeService.createStore({
       name,
       address,
@@ -49,7 +52,7 @@ export class StoreController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body()
     body: UpdateStoreDto,
-  ) {
+  ): StoreResponseDto {
     return this.storeService.updateStore(id, body);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StoreType, data } from './data';
 
 import { v4 as uuid } from 'uuid';
+import { StoreResponseDto } from './dtos/store.dto';
 
 export interface StoreData {
   name: string;
@@ -21,12 +22,15 @@ interface UpdateStoreData {
 
 @Injectable()
 export class StoreService {
-  getAllStores() {
-    return data.store;
+  getAllStores(): StoreResponseDto[] {
+    return data.store.map((store) => new StoreResponseDto(store));
   }
 
-  getStoreById(id: string) {
-    return data.store.find((store) => store.id === id);
+  getStoreById(id: string): StoreResponseDto {
+    const store = data.store.find((store) => store.id === id);
+    if (!store) return;
+
+    return new StoreResponseDto(store);
   }
 
   createStore({ name, address, description, location, type }: StoreData) {
@@ -41,7 +45,7 @@ export class StoreService {
       updated_at: new Date(),
     };
     data.store.push(newStore);
-    return newStore;
+    return new StoreResponseDto(newStore);
   }
 
   updateStore(id: string, body: UpdateStoreData) {
@@ -55,7 +59,7 @@ export class StoreService {
       updated_at: new Date(),
     };
 
-    return data.store[storeIndex];
+    return new StoreResponseDto(data.store[storeIndex]);
   }
 
   deleteStore(id: string) {
