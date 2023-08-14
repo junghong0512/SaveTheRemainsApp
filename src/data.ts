@@ -9,6 +9,14 @@ interface Data {
     created_at: Date;
     updated_at: Date;
   }[];
+  item: {
+    id: string;
+    name: string;
+    price: number;
+    store_id: string;
+    created_at: Date;
+    updated_at: Date;
+  }[];
 }
 
 export enum StoreType {
@@ -19,6 +27,13 @@ export enum StoreType {
   MAXICAN = 'maxican',
   BAKERY = 'bakery',
   GROCERY = 'grocery',
+}
+
+export enum ItemType {
+  BAKERY = 'bakery',
+  GROCERY = 'grocery',
+  KOREAN = 'korean',
+  VEGAN = 'VEGAN',
 }
 
 export const data: Data = {
@@ -50,6 +65,17 @@ export const data: Data = {
       description: '버거킹 매장',
       location: [127, 37],
       type: StoreType.MAXICAN,
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  ],
+
+  item: [
+    {
+      id: 'itemuuid1',
+      name: 'Bakery Package',
+      price: 5000,
+      store_id: 'uuid1',
       created_at: new Date(),
       updated_at: new Date(),
     },
